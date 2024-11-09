@@ -26,13 +26,19 @@ train_data_squished = train_data.sample(frac=0.025)
 # Create a multigraph with TransactionIDs as nodes and columns as edges (some of the columns had too much data and the graph was too large)
 G_train = nx.MultiGraph()
 # columns = ['P_emaildomain', 'R_emaildomain', 'card4', 'card6']
-columns = ['P_emaildomain', 'R_emaildomain', ]
+edge_features = ['P_emaildomain', 'R_emaildomain', ]
+node_features = train_data_squished.drop(columns=edge_features + ['TransactionID']).columns
 
-for col in columns:
-    col_groups = train_data_squished.groupby(col)['TransactionID'].apply(list)
+for _, row in train_data_squished.iterrows():
+    transaction_id = row['TransactionID']
+    node_attributes = {feature: row[feature] for feature in node_features}
+    G_train.add_node(transaction_id, **node_attributes)
+
+for edge in edge_features:
+    col_groups = train_data_squished.groupby(edge)['TransactionID'].apply(list)
     for transactions in col_groups:
         for i in range(len(transactions)):
             for j in range(i + 1, len(transactions)):
-                G_train.add_edge(transactions[i], transactions[j], key=col)
+                G_train.add_edge(transactions[i], transactions[j], key=edge)
                 
 nx.write_graphml(G_train, 'transaction_multigraph.graphml')
