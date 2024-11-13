@@ -18,11 +18,11 @@ The dataset, found on Kaggle, consists of:
 
 ### Requirements
 - **Python** >= 3.7
-- **PyTorch** >= 1.9
-- **PyTorch Geometric (PyG)** >= 2.0
-- **scikit-learn** >= 0.24
-- **pandas**
-- **numpy**
+- **PyTorch** >= 2.5.0
+- **PyTorch Geometric (PyG)** >= 2.6.1
+- **scikit-learn** >= 1.5.2
+- **pandas** >= 2.2.3 
+- **numpy** >= 2.1.2
 
 
 ## Contact
