@@ -1,11 +1,10 @@
-import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch_geometric.nn import GCNConv, BatchNorm
 
-class FraudGNN(nn.Module):
+class FraudGCN(nn.Module):
     def __init__(self, input_dim, hidden_dim, output_dim):
-        super(FraudGNN, self).__init__()
+        super(FraudGCN, self).__init__()
         # First GCN layer
         self.conv1 = GCNConv(input_dim, hidden_dim)
         # Batch Normalization layer

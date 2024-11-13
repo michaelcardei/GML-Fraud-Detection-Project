@@ -1,2 +1,5 @@
 ieee_fraud_detection/
 plots/
+graph/
+__pycache__/
+*pth
