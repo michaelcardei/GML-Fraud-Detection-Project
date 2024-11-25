@@ -1,8 +1,8 @@
 import torch
 import torch.nn as nn
 from src.make_graph import load_graph
-from src.make_plots import plot_loss_acc
-from models.gcn import FraudGCN
+from src.make_plots import plot_loss_acc, plot_classification_report
+from src.models import FraudGCN, GraphSAGE, GAT
 
 MODELS_DIR = "./models"
 
@@ -39,7 +39,7 @@ def train(model, data_pg, epochs=1000, lr=0.0001):
                 pred_counts = torch.bincount(pred)
                 print(f"Predicted label counts: {pred_counts}")
 
-    return model, loss_arr, acc_arr
+    return model, loss_arr, acc_arr, pred
 
 def main():
     # Load the graph data
@@ -54,19 +54,20 @@ def main():
     # Initialize model and move to device
     print("Creating Model")
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    gcn2 = FraudGCN(input_dim=input_dim, hidden_dim=hidden_dim, output_dim=output_dim)
+    gat = GAT(input_dim=input_dim, hidden_dim=hidden_dim, output_dim=output_dim)
 
     # Train the model
     print("Training Model")
-    gcn2, loss, acc = train(gcn2.to(device), data_pg.to(device))
+    gat, loss, acc, pred = train(gat.to(device), data_pg.to(device), epochs=200)
 
     # Save the model
     print("Saving Model")
-    torch.save(gcn2.state_dict(), f"{MODELS_DIR}/gcn2.pth")
+    torch.save(gat.state_dict(), f"{MODELS_DIR}/gat.pth")
 
     # Plot the loss and accuracy
     print("Plotting Loss and Accuracy")
-    plot_loss_acc(loss, acc)
+    plot_classification_report(data_pg, pred, plot_fn="classification_report_gat")
+    plot_loss_acc(loss, acc, plot_fn="train_loss_plot_gat")
     
 if __name__ == "__main__":
     main()
