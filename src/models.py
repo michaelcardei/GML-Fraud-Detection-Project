@@ -74,9 +74,10 @@ class GraphSAGE(nn.Module):
 class GAT(nn.Module):
     def __init__(self, input_dim, hidden_dim, output_dim):
         super(GAT, self).__init__()
-        self.gat1 = GATv2Conv(in_channels=input_dim, out_channels=hidden_dim, heads=1, dropout=0.4)
+        num_heads = 1
+        self.gat1 = GATv2Conv(in_channels=input_dim, out_channels=hidden_dim, heads=num_heads, dropout=0.4)
         self.gat2 = GATv2Conv(
-            in_channels=hidden_dim * 1, out_channels=output_dim, heads=1, concat=False, dropout=0.4
+            in_channels=hidden_dim * num_heads, out_channels=output_dim, heads=1, concat=False, dropout=0.4
         )
         self.dropout = nn.Dropout(p=0.4)
 

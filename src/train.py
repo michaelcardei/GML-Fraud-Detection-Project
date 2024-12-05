@@ -1,7 +1,8 @@
 import torch
 import torch.nn as nn
+import random
 from src.make_graph import load_graph
-from src.make_plots import plot_loss_acc, plot_classification_report
+from src.make_plots import plot_loss_acc, plot_classification_report, plot_graph
 from src.models import FraudGCN, GraphSAGE, GAT
 
 MODELS_DIR = "./models"
@@ -45,29 +46,30 @@ def main():
     # Load the graph data
     print("Loading graph")
     data_pg = load_graph(graph_fn="fraud_network.pth")
+    plot_graph(data_pg)
 
-    # Model parameters
-    input_dim = data_pg.x.shape[1]
-    hidden_dim = 128
-    output_dim = 2
+    # # Model parameters
+    # input_dim = data_pg.x.shape[1]
+    # hidden_dim = 128
+    # output_dim = 2
 
-    # Initialize model and move to device
-    print("Creating Model")
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    gat = GAT(input_dim=input_dim, hidden_dim=hidden_dim, output_dim=output_dim)
+    # # Initialize model and move to device
+    # print("Creating Model")
+    # device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    # gat = GAT(input_dim=input_dim, hidden_dim=hidden_dim, output_dim=output_dim)
 
-    # Train the model
-    print("Training Model")
-    gat, loss, acc, pred = train(gat.to(device), data_pg.to(device), epochs=200)
+    # # Train the model
+    # print("Training Model")
+    # gat, loss, acc, pred = train(gat.to(device), data_pg.to(device), epochs=200)
 
-    # Save the model
-    print("Saving Model")
-    torch.save(gat.state_dict(), f"{MODELS_DIR}/gat.pth")
+    # # Save the model
+    # print("Saving Model")
+    # torch.save(gat.state_dict(), f"{MODELS_DIR}/gat.pth")
 
-    # Plot the loss and accuracy
-    print("Plotting Loss and Accuracy")
-    plot_classification_report(data_pg, pred, plot_fn="classification_report_gat")
-    plot_loss_acc(loss, acc, plot_fn="train_loss_plot_gat")
+    # # Plot the loss and accuracy
+    # print("Plotting Loss and Accuracy")
+    # plot_classification_report(data_pg, pred, plot_fn="classification_report_gat")
+    # plot_loss_acc(loss, acc, plot_fn="train_loss_plot_gat")
     
 if __name__ == "__main__":
     main()
